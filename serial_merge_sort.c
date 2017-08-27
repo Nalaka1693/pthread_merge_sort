@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SIZE 8
+#define DATA data_3
+#define SIZE 21
 
 int data_0[4] = {4, 1, 3, 2};
 int data_1[8] = {5, 3, 7, 6, 2, 1, 4, 0};
-int data_2[10] = {8, 5, 3, 9, 7, 6, 2, 1, 4, 0};
+int data_2[10] = {8, 5, 9, 7, 3, 6, 2, 1, 4, 0};
 int data_3[21] = {15, 8, 3, 4, 1, 3, 2, 7, 6, 10, 9, 1, 3, 8, 3, 9, 4, 2, 11, 6, 5};
 
 void merge_sort(int *, int);
@@ -15,8 +16,9 @@ void merge(int *, int, int, int, int);
 void print_arr(char *, int *, int, int);
 
 int main() {
-    merge_sort(data_1, SIZE);
-    print_arr(NULL, data_1, 0, SIZE);
+    print_arr(NULL, DATA, 0, SIZE);
+    merge_sort(DATA, SIZE);
+    print_arr(NULL, DATA, 0, SIZE);
 
     return 0;
 }
