@@ -2,23 +2,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define DATA data_3
-#define SIZE 21
-
-int data_0[4] = {4, 1, 3, 2};
-int data_1[8] = {5, 3, 7, 6, 2, 1, 4, 0};
-int data_2[10] = {8, 5, 9, 7, 3, 6, 2, 1, 4, 0};
-int data_3[21] = {15, 8, 3, 4, 1, 3, 2, 7, 6, 10, 9, 1, 3, 8, 3, 9, 4, 2, 11, 6, 5};
+#define MAX 100
+#define SIZE 20
 
 void merge_sort(int *, int);
 void split(int *, int, int, int);
 void merge(int *, int, int, int, int);
+int *generate_data(int);
 void print_arr(char *, int *, int, int);
 
 int main() {
-    print_arr(NULL, DATA, 0, SIZE);
-    merge_sort(DATA, SIZE);
-    print_arr(NULL, DATA, 0, SIZE);
+    int *arr = generate_data(SIZE);
+    print_arr(NULL, arr, 0, SIZE);
+    merge_sort(arr, SIZE);
+    print_arr(NULL, arr, 0, SIZE);
 
     return 0;
 }
@@ -58,6 +55,20 @@ void merge(int *arr, int start, int mid, int end, int size) {
     while (j < end) {
         arr[k++] = copy[j++];
     }
+
+    free(copy);
+}
+
+/* generate some random data of given size
+ */
+int *generate_data(int size) {
+    int *p = malloc(sizeof(int) * size);
+    int i;
+    for(i = 0; i < size; i++) {
+        p[i] = rand() % MAX;
+    }
+
+    return p;
 }
 
 void print_arr(char *msg, int *arr, int start, int end) {
