@@ -31,23 +31,15 @@ void *thread_routine_split(void *arg) {
     int end = ((thread_data_t *) arg)->end;
     int *arr = ((thread_data_t *) arg)->arr;
     int size = ((thread_data_t *) arg)->size;
-    printf("tc=%d, s=%d, e=%d\n", thread_count, start, end);
 
     if (end - start == 1) {
-        printf("one ele\n");
         pthread_exit(NULL);
     }
 
     if (thread_count > (ONE << LEVELS) - 2) {   // limit the threads by levels, 2^(LVL)-2 threads
-        pthread_mutex_lock(&mutex);
-        print_arr("qs", arr, start, end);
         quick_sort(arr, start, end-1);
-        print_arr("qs", arr, start, end);
-        pthread_mutex_unlock(&mutex);
-        printf("%d thr exited\n", thread_count);
         pthread_exit(NULL);
     } else {
-        printf("two created\n");
         int mid = (start + end) / 2;
 
         thread_data_t *thread_data_1 = (thread_data_t *) malloc(sizeof(thread_data_t));
@@ -98,6 +90,8 @@ void parallel_merge_sort(int *arr, int size) {
 
     pthread_join(thread_1, NULL);
     pthread_join(thread_2, NULL);
+
+    serial_merge(arr, 0, mid, size, size);
 
     pthread_mutex_destroy(&mutex);
 }
