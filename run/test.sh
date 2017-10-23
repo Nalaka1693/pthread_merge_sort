@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 cd ../
-gcc -o test test.c -lpthread
+gcc -o test test.c serial_merge_sort.c parallel_merge_sort.c -lpthread
 unamestr=`uname`
 if [[ "$unamestr" == 'Linux' ]]; then
    ./test

@@ -3,26 +3,10 @@
 #include <string.h>
 #include "mergesort.h"
 
-#define MAX 100
-#define SIZE 20
-
-void merge_sort(int *, int);
 void split(int *, int, int, int);
 void merge(int *, int, int, int, int);
-int *generate_data(int);
-void print_arr(char *, int *, int, int);
-int *merge_sorted_arr(int *, int *, int, int);
 
-int main() {
-    int *arr = generate_data(SIZE);
-    print_arr(NULL, arr, 0, SIZE);
-    merge_sort(arr, SIZE);
-    print_arr(NULL, arr, 0, SIZE);
-
-    return 0;
-}
-
-void merge_sort(int *arr, int size) {
+void serial_merge_sort(int *arr, int size) {
     split(arr, 0, size, size);
 }
 
@@ -61,13 +45,11 @@ void merge(int *arr, int start, int mid, int end, int size) {
     free(copy);
 }
 
-/* generate some random data of given size
- */
-int *generate_data(int size) {
+int *generate_data(int size, int max) {
     int *p = malloc(sizeof(int) * size);
     int i;
     for(i = 0; i < size; i++) {
-        p[i] = rand() % MAX;
+        p[i] = rand() % max;
     }
 
     return p;
