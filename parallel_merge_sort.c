@@ -5,7 +5,6 @@
 #include <assert.h>
 #include "mergesort.h"
 
-#define THREADS 2
 #define LEVELS 2    // depth of the parallel decomposition tree
 
 typedef struct {
@@ -18,8 +17,8 @@ typedef struct {
 void serial_merge(int *, int, int, int, int);
 int partition(int *, int, int);
 
-int thread_count = 0;
 unsigned int ONE = 1;
+int thread_count = 0;
 pthread_mutex_t mutex;
 
 void *thread_routine_split(void *arg) {
@@ -37,7 +36,8 @@ void *thread_routine_split(void *arg) {
     }
 
     if (thread_count > (ONE << LEVELS) - 2) {   // limit the threads by levels, 2^(LVL)-2 threads
-        quick_sort(arr, start, end-1);
+        serial_merge_sort(arr, start, end, size);
+//        quick_sort(arr, start, end-1);
         pthread_exit(NULL);
     } else {
         int mid = (start + end) / 2;
@@ -123,8 +123,9 @@ void serial_merge(int *arr, int start, int mid, int end, int size) {
 int partition(int *arr, int start, int end) {
     int pivot = arr[end];   // pivot
     int i = (start - 1);    // index of smaller element
+    int j;
 
-    for (int j = start; j <= end - 1; j++) {
+    for (j = start; j <= end - 1; j++) {
         // if current element is smaller than or equal to pivot
         if (arr[j] <= pivot) {
             i++;            // increment index of smaller element

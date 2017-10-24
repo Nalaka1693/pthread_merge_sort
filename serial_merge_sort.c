@@ -3,46 +3,60 @@
 #include <string.h>
 #include "mergesort.h"
 
-void split(int *, int, int, int);
-void merge(int *, int, int, int, int);
+void split(int *, int *, int, int, int, int, int);
+void merge(int *, int *, int, int, int, int);
 
-void serial_merge_sort(int *arr, int size) {
-    split(arr, 0, size, size);
+void serial_merge_sort(int *arr, int start, int end, int size) {
+    int *copy = malloc(sizeof(int) * size);
+    split(arr, copy, start, end, size, 0, 0);
+    free(copy);
 }
 
-void split(int *arr, int start, int end, int size) {
+void split(int *arr, int *copy, int start, int end, int size, int depth, int max_depth) {
     if (end - start == 1) {
         return;
     }
 
     int mid = (start + end) / 2;
-    split(arr, start, mid, size);
-    split(arr, mid, end, size);
-    merge(arr, start, mid, end, size);
+    printf("s = %d, m = %d, e = %d, d = %d, md = %d\n", start, mid, end, depth, max_depth);
+    split(arr, copy, start, mid, size, depth + 1, max_depth);
+    split(arr, copy, mid, end, size, depth + 1, max_depth);
+
+    int *src, *dst;
+    if (mid - start == 1 || end - mid == 1) {
+        src = arr;
+        dst = copy;
+        max_depth = depth;
+    } else if (max_depth != 0 && (max_depth - depth) % 2 == 1 ) {
+        src = copy;
+        dst = arr;
+    } else if (max_depth != 0 && (max_depth - depth) % 2 == 0) {
+        src = arr;
+        dst = copy;
+    }
+
+    merge(src, dst, start, mid, end, size);
 }
 
-void merge(int *arr, int start, int mid, int end, int size) {
-    int *copy = malloc(sizeof(int) * size);
-    memcpy(copy, arr, sizeof(int) * size);
+void merge(int *src, int *dst, int start, int mid, int end, int size) {
+//    memcpy(dst, src, sizeof(int) * size);
 
     int i = start, j = mid, k = start;
 
     while (i < mid && j < end) {
-        if (copy[i] < copy[j]) {
-            arr[k++] = copy[i++];
+        if (dst[i] < dst[j]) {
+            src[k++] = dst[i++];
         } else {
-            arr[k++] = copy[j++];
+            src[k++] = dst[j++];
         }
     }
     
     while (i < mid) {
-        arr[k++] = copy[i++];
+        src[k++] = dst[i++];
     }
     while (j < end) {
-        arr[k++] = copy[j++];
+        src[k++] = dst[j++];
     }
-
-    free(copy);
 }
 
 int *generate_data(int size, int max) {

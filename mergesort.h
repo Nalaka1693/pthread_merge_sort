@@ -16,9 +16,11 @@ void quick_sort(int *arr, int start, int end);
 
 /* serial merge sort
  * @ arr: pointer to the array
+ * @ start: start position -> 0
+ * @ end: end position -> SIZE
  * @ size: size of the array
  */
-void serial_merge_sort(int *arr, int size);
+void serial_merge_sort(int *arr, int start, int end, int size);
 
 /* print one line array
  * @ msg: message to print in a new line
