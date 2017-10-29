@@ -3,59 +3,64 @@
 #include <string.h>
 #include "mergesort.h"
 
-void split(int *, int *, int, int, int, int, int);
+void split(int *, int *, int, int, int, int, int *);
 void merge(int *, int *, int, int, int, int);
 
 void serial_merge_sort(int *arr, int start, int end, int size) {
-    int *copy = malloc(sizeof(int) * size);
-    split(arr, copy, start, end, size, 0, 0);
+    int max_depth = 0, *copy = malloc(sizeof(int) * size);
+    split(arr, copy, start, end, size, 0, &max_depth);
+
+    if (max_depth % 2 == 0) {
+        memcpy(arr, copy, sizeof(int) * size);
+    }
     free(copy);
 }
 
-void split(int *arr, int *copy, int start, int end, int size, int depth, int max_depth) {
+void split(int *arr, int *copy, int start, int end, int size, int depth, int *max_depth) {
+
     if (end - start == 1) {
         return;
     }
 
     int mid = (start + end) / 2;
-    printf("s = %d, m = %d, e = %d, d = %d, md = %d\n", start, mid, end, depth, max_depth);
+
     split(arr, copy, start, mid, size, depth + 1, max_depth);
     split(arr, copy, mid, end, size, depth + 1, max_depth);
 
     int *src, *dst;
-    if (mid - start == 1 || end - mid == 1) {
-        src = arr;
-        dst = copy;
-        max_depth = depth;
-    } else if (max_depth != 0 && (max_depth - depth) % 2 == 1 ) {
-        src = copy;
-        dst = arr;
-    } else if (max_depth != 0 && (max_depth - depth) % 2 == 0) {
-        src = arr;
-        dst = copy;
+    if (end - start == 2) {
+        *max_depth = depth;
+    }
+
+    if (*max_depth != 0) {
+        if ((*max_depth - depth) % 2 == 0) {
+            src = arr;
+            dst = copy;
+        } else if ((*max_depth - depth) % 2 == 1) {
+            src = copy;
+            dst = arr;
+        }
     }
 
     merge(src, dst, start, mid, end, size);
 }
 
 void merge(int *src, int *dst, int start, int mid, int end, int size) {
-//    memcpy(dst, src, sizeof(int) * size);
-
     int i = start, j = mid, k = start;
 
     while (i < mid && j < end) {
-        if (dst[i] < dst[j]) {
-            src[k++] = dst[i++];
+        if (src[i] < src[j]) {
+            dst[k++] = src[i++];
         } else {
-            src[k++] = dst[j++];
+            dst[k++] = src[j++];
         }
     }
     
     while (i < mid) {
-        src[k++] = dst[i++];
+        dst[k++] = src[i++];
     }
     while (j < end) {
-        src[k++] = dst[j++];
+        dst[k++] = src[j++];
     }
 }
 

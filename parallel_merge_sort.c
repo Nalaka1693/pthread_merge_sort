@@ -37,7 +37,6 @@ void *thread_routine_split(void *arg) {
 
     if (thread_count > (ONE << LEVELS) - 2) {   // limit the threads by levels, 2^(LVL)-2 threads
         serial_merge_sort(arr, start, end, size);
-//        quick_sort(arr, start, end-1);
         pthread_exit(NULL);
     } else {
         int mid = (start + end) / 2;
